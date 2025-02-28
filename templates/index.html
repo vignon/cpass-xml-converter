@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSV to XML Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .sample {
+            margin-top: 20px;
+        }
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+        }
+        .tab-button {
+            flex: 1;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        #uploadTab {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #textTab {
+            background-color: #f1f1f1;
+            color: black;
+        }
+        textarea {
+            font-family: monospace;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CSV to XML Converter</h1>
+        
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <p>You can either upload a CSV file or enter data manually in the text box.</p>
+            
+            <h4>Option 1: Upload a CSV file with the following format:</h4>
+            <pre>name,ip_address
+example-01,1.1.10.10
+example-02,1.1.20.20</pre>
+            
+            <h4>Option 2: Enter data directly in the text box:</h4>
+            <p>Type or paste your name,IP pairs (one per line) in the following format:</p>
+            <pre>example-01,1.1.10.10
+example-02,1.1.20.20</pre>
+            
+            <p>The application will convert your input to XML in the specified format with Cisco as the vendor and standard secrets.</p>
+        </div>
+        
+        <h3>Choose Input Method:</h3>
+        
+        <div style="display: flex; margin-bottom: 20px;">
+            <button type="button" onclick="showUploadForm()" class="tab-button" id="uploadTab">Upload CSV File</button>
+            <button type="button" onclick="showTextForm()" class="tab-button" id="textTab">Enter Data Manually</button>
+        </div>
+        
+        <div id="uploadForm">
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="input_type" value="file">
+                <div class="form-group">
+                    <label for="file">Select CSV File:</label>
+                    <input type="file" id="file" name="file" accept=".csv">
+                </div>
+                
+                <button type="submit">Convert to XML</button>
+            </form>
+            
+            <div class="sample">
+                <a href="{{ url_for('sample') }}">Download Sample CSV</a>
+            </div>
+        </div>
+        
+        <div id="textForm" style="display: none;">
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="input_type" value="text">
+                <div class="form-group">
+                    <label for="text_data">Enter Name,IP pairs (one per line):</label>
+                    <textarea id="text_data" name="text_data" rows="10" style="width: 100%; padding: 8px;" placeholder="example-01,1.1.10.10&#10;example-02,1.1.20.20"></textarea>
+                </div>
+                
+                <button type="submit">Convert to XML</button>
+            </form>
+        </div>
+        
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        <script>
+            function showUploadForm() {
+                document.getElementById('uploadForm').style.display = 'block';
+                document.getElementById('textForm').style.display = 'none';
+                document.getElementById('uploadTab').style.backgroundColor = '#4CAF50';
+                document.getElementById('uploadTab').style.color = 'white';
+                document.getElementById('textTab').style.backgroundColor = '#f1f1f1';
+                document.getElementById('textTab').style.color = 'black';
+            }
+            
+            function showTextForm() {
+                document.getElementById('uploadForm').style.display = 'none';
+                document.getElementById('textForm').style.display = 'block';
+                document.getElementById('textTab').style.backgroundColor = '#4CAF50';
+                document.getElementById('textTab').style.color = 'white';
+                document.getElementById('uploadTab').style.backgroundColor = '#f1f1f1';
+                document.getElementById('uploadTab').style.color = 'black';
+            }
+        </script>
+    </div>
+</body>
+</html>
