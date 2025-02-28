@@ -7,6 +7,7 @@ This Flask application converts CSV files containing name and IP address pairs i
 - Simple web interface with two input methods:
   - Upload a CSV file
   - Enter name,IP pairs directly in a text box
+- Customizable RADIUS and TACACS secrets (can be left blank)
 - Automatic conversion to the required XML format
 - Sample CSV file available for download
 - Error handling for invalid inputs
@@ -58,6 +59,7 @@ csv_to_xml_app/
      example-01,1.1.10.10
      example-02,1.1.20.20
      ```
+   - Optionally fill in the RADIUS and TACACS secrets (or leave blank)
    - Click the "Convert to XML" button
 
    **Method 2: Enter data manually**
@@ -67,19 +69,35 @@ csv_to_xml_app/
      example-01,1.1.10.10
      example-02,1.1.20.20
      ```
+   - Optionally fill in the RADIUS and TACACS secrets (or leave blank)
    - Click the "Convert to XML" button
 
 5. The application will generate and download an XML file with the specified format
 
 ## Sample Output XML
 
+If you enter custom secrets (for example, "MyRadiusSecret" and "MyTacacsSecret"):
+
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <TipsContents xmlns="http://www.avendasys.com/tipsapiDefs/1.0">
   <TipsHeader exportTime="Fri Feb 28 17:05:11 EST 2025" version="6.11"/>
   <NadClients>
-    <NadClient description="" name="example-01" nadGroups="" coaPort="3799" radsecEnabled="false" coaCapable="true" vendorName="Cisco" tacacsSecret="20t!ntt@k19" radiusSecret="20t!ntt@k19" ipAddress="1.1.10.10"/>
-    <NadClient description="" name="example-02" nadGroups="" coaPort="3799" radsecEnabled="false" coaCapable="true" vendorName="Cisco" tacacsSecret="20t!ntt@k19" radiusSecret="20t!ntt@k19" ipAddress="1.1.20.20"/>
+    <NadClient description="" name="example-01" nadGroups="" coaPort="3799" radsecEnabled="false" coaCapable="true" vendorName="Cisco" tacacsSecret="MyTacacsSecret" radiusSecret="MyRadiusSecret" ipAddress="1.1.10.10"/>
+    <NadClient description="" name="example-02" nadGroups="" coaPort="3799" radsecEnabled="false" coaCapable="true" vendorName="Cisco" tacacsSecret="MyTacacsSecret" radiusSecret="MyRadiusSecret" ipAddress="1.1.20.20"/>
+  </NadClients>
+</TipsContents>
+```
+
+If you leave the secrets blank:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TipsContents xmlns="http://www.avendasys.com/tipsapiDefs/1.0">
+  <TipsHeader exportTime="Fri Feb 28 17:05:11 EST 2025" version="6.11"/>
+  <NadClients>
+    <NadClient description="" name="example-01" nadGroups="" coaPort="3799" radsecEnabled="false" coaCapable="true" vendorName="Cisco" tacacsSecret="" radiusSecret="" ipAddress="1.1.10.10"/>
+    <NadClient description="" name="example-02" nadGroups="" coaPort="3799" radsecEnabled="false" coaCapable="true" vendorName="Cisco" tacacsSecret="" radiusSecret="" ipAddress="1.1.20.20"/>
   </NadClients>
 </TipsContents>
 ```

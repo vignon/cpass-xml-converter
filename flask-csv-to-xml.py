@@ -54,6 +54,10 @@ def index():
             else:
                 return render_template('index.html', error='Invalid input type')
             
+            # Get secrets from form
+            radius_secret = request.form.get('radius_secret', '')
+            tacacs_secret = request.form.get('tacacs_secret', '')
+            
             # Create XML structure
             root = ET.Element("TipsContents")
             root.set("xmlns", "http://www.avendasys.com/tipsapiDefs/1.0")
@@ -86,8 +90,8 @@ def index():
                         nad_client.set("radsecEnabled", "false")
                         nad_client.set("coaCapable", "true")
                         nad_client.set("vendorName", "Cisco")
-                        nad_client.set("tacacsSecret", "20t!ntt@k19")
-                        nad_client.set("radiusSecret", "20t!ntt@k19")
+                        nad_client.set("tacacsSecret", tacacs_secret)
+                        nad_client.set("radiusSecret", radius_secret)
                         nad_client.set("ipAddress", ip_address)
             
             if not has_valid_data:

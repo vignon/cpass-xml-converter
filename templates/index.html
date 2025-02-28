@@ -79,6 +79,24 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        .secrets-container {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        .secrets-container h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .secret-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
         pre {
             background-color: #f8f8f8;
             padding: 10px;
@@ -105,7 +123,10 @@ example-02,1.1.20.20</pre>
             <pre>example-01,1.1.10.10
 example-02,1.1.20.20</pre>
             
-            <p>The application will convert your input to XML in the specified format with Cisco as the vendor and standard secrets.</p>
+            <p>The application will convert your input to XML in the specified format with Cisco as the vendor.</p>
+            
+            <h4>Security Secrets:</h4>
+            <p>You can optionally specify the RADIUS and TACACS secrets in the fields above. If left blank, the secrets will be empty in the generated XML.</p>
         </div>
         
         <h3>Choose Input Method:</h3>
@@ -115,9 +136,23 @@ example-02,1.1.20.20</pre>
             <button type="button" onclick="showTextForm()" class="tab-button" id="textTab">Enter Data Manually</button>
         </div>
         
+        <div class="secrets-container">
+            <h3>Security Secrets</h3>
+            <div class="form-group">
+                <label for="radius_secret">RADIUS Secret:</label>
+                <input type="text" id="radius_secret" name="radius_secret" class="secret-input" placeholder="Leave blank for no secret">
+            </div>
+            <div class="form-group">
+                <label for="tacacs_secret">TACACS Secret:</label>
+                <input type="text" id="tacacs_secret" name="tacacs_secret" class="secret-input" placeholder="Leave blank for no secret">
+            </div>
+        </div>
+        
         <div id="uploadForm">
             <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="input_type" value="file">
+                <input type="hidden" id="radius_secret_upload" name="radius_secret" value="">
+                <input type="hidden" id="tacacs_secret_upload" name="tacacs_secret" value="">
                 <div class="form-group">
                     <label for="file">Select CSV File:</label>
                     <input type="file" id="file" name="file" accept=".csv">
@@ -134,6 +169,8 @@ example-02,1.1.20.20</pre>
         <div id="textForm" style="display: none;">
             <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="input_type" value="text">
+                <input type="hidden" id="radius_secret_text" name="radius_secret" value="">
+                <input type="hidden" id="tacacs_secret_text" name="tacacs_secret" value="">
                 <div class="form-group">
                     <label for="text_data">Enter Name,IP pairs (one per line):</label>
                     <textarea id="text_data" name="text_data" rows="10" style="width: 100%; padding: 8px;" placeholder="example-01,1.1.10.10&#10;example-02,1.1.20.20"></textarea>
@@ -167,6 +204,28 @@ example-02,1.1.20.20</pre>
                 document.getElementById('uploadTab').style.backgroundColor = '#f1f1f1';
                 document.getElementById('uploadTab').style.color = 'black';
             }
+            
+            // Update hidden fields with secret values before form submission
+            document.addEventListener('DOMContentLoaded', function() {
+                const radiusInput = document.getElementById('radius_secret');
+                const tacacsInput = document.getElementById('tacacs_secret');
+                
+                radiusInput.addEventListener('input', function() {
+                    document.getElementById('radius_secret_upload').value = this.value;
+                    document.getElementById('radius_secret_text').value = this.value;
+                });
+                
+                tacacsInput.addEventListener('input', function() {
+                    document.getElementById('tacacs_secret_upload').value = this.value;
+                    document.getElementById('tacacs_secret_text').value = this.value;
+                });
+                
+                // Set initial values for hidden fields
+                document.getElementById('radius_secret_upload').value = radiusInput.value;
+                document.getElementById('radius_secret_text').value = radiusInput.value;
+                document.getElementById('tacacs_secret_upload').value = tacacsInput.value;
+                document.getElementById('tacacs_secret_text').value = tacacsInput.value;
+            });
         </script>
     </div>
 </body>
